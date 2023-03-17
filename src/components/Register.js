@@ -92,23 +92,23 @@ const Register = () => {
   const validateInput = (data) => {
     let bool = true;
     if(data.username === ""){
-      enqueueSnackbar("Username is a required field", { variant: "error" });
+      enqueueSnackbar("Username is a required field", { variant: "warning" });
       bool = false;
     }
     else if(data.username.length < 6){
-      enqueueSnackbar("Username must be at least 6 characters", { variant: "error" });
+      enqueueSnackbar("Username must be at least 6 characters", { variant: "warning" });
       bool = false;
     }
     else if(data.password === ""){
-      enqueueSnackbar("Password is a required field", { variant: "error" });
+      enqueueSnackbar("Password is a required field", { variant: "warning" });
       bool = false;
     }
     else if(data.password.length < 6){
-      enqueueSnackbar("Password must be at least 6 characters", { variant: "error" });
+      enqueueSnackbar("Password must be at least 6 characters", { variant: "warning" });
       bool = false;
     }
     else if(data.password !== data.confirmPassword){
-      enqueueSnackbar("Passwords do not match", { variant: "error" });
+      enqueueSnackbar("Passwords do not match", { variant: "warning" });
       bool = false;
     }
     return bool;

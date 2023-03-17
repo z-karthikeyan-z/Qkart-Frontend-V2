@@ -87,11 +87,11 @@ const Login = () => {
   const validateInput = (data) => {
     let bool = true;
     if(data.username === ""){
-      enqueueSnackbar("Username is a required field", { variant: "error" });
+      enqueueSnackbar("Username is a required field", { variant: "warning" });
       bool = false;
     }
     else if(data.password === ""){
-      enqueueSnackbar("Password is a required field", { variant: "error" });
+      enqueueSnackbar("Password is a required field", { variant: "warning" });
       bool = false;
     }
     return bool;
