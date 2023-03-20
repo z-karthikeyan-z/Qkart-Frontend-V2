@@ -7,8 +7,7 @@ import "./Header.css";
 import { useHistory, Link } from "react-router-dom";
 const Header = ({ children, hasHiddenAuthButtons }) => {
   const history = useHistory();
-  const [log, setLog] = useState(children);
-  console.log(log);
+  const [log, setLog] = useState(localStorage.getItem("username"));
   return (
     <Box className="header">
       <Box className="header-title">
@@ -26,8 +25,11 @@ const Header = ({ children, hasHiddenAuthButtons }) => {
           Back to explore
         </Button>
       ) : (
+        <>
+        <Box width="30vw">{children}</Box>
         <Box>
           {log ? (
+            <>
             <Stack direction="row" spacing={2} alignItems="center">
               <Avatar alt={localStorage.getItem("username")} src="avatar.png" />
               <p className="title">{localStorage.getItem("username")}</p>
@@ -45,7 +47,9 @@ const Header = ({ children, hasHiddenAuthButtons }) => {
                 LOGOUT
               </Button>
             </Stack>
+            </>
           ) : (
+            <>
             <Stack direction="row" spacing={2} alignItems="center">
               <Button
                 className="explore-button"
@@ -66,8 +70,10 @@ const Header = ({ children, hasHiddenAuthButtons }) => {
                 REGISTER
               </Button>
             </Stack>
+            </>
           )}
         </Box>
+        </>
       )}
     </Box>
   );
