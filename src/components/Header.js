@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import React from "react";
 import "./Header.css";
 import { useHistory, Link } from "react-router-dom";
-const Header = ({ children, hasHiddenAuthButtons }) => {
+const Header = ({ logUpdate, children, hasHiddenAuthButtons }) => {
   const history = useHistory();
   const [log, setLog] = useState(localStorage.getItem("username"));
   return (
@@ -41,6 +41,7 @@ const Header = ({ children, hasHiddenAuthButtons }) => {
                   localStorage.removeItem("token");
                   localStorage.removeItem("balance");
                   setLog(false);
+                  logUpdate()
                   history.push("/");
                 }}
               >

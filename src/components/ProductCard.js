@@ -26,7 +26,7 @@ const ProductCard = ({ product, handleAddToCart }) => {
           <h6 className="title">${product.cost}</h6>
           <Rating name="read-only" value={product.rating} readOnly />
         </CardContent>
-        <Button sx={{ p: 2, m:2 }} className="button" variant="contained" startIcon={<AddShoppingCartOutlined />}>
+        <Button sx={{ p: 2, m:2 }} className="button" variant="contained" onClick = {handleAddToCart} startIcon={<AddShoppingCartOutlined />}>
             ADD TO CART
            </Button>
     </Card>
