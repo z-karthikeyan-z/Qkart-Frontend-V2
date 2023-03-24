@@ -48,13 +48,13 @@ import "./Cart.css";
  *
  */
 export const generateCartItemsFrom = (cartData, productsData) => {
-    let cartMetaData = cartData.map((cartItem) => {
-      let product = productsData.filter(
-        (productItem) => productItem._id === cartItem.productId
-      );
-      return { ...product[0], qty: cartItem.qty };
-    });
-    return cartMetaData;
+  let cartMetaData = cartData.map((cartItem) => {
+    let product = productsData.filter(
+      (productItem) => productItem._id === cartItem.productId
+    );
+    return { ...product[0], qty: cartItem.qty };
+  });
+  return cartMetaData;
 };
 
 /**
@@ -69,9 +69,18 @@ export const generateCartItemsFrom = (cartData, productsData) => {
  */
 export const getTotalCartValue = (items = []) => {
   let tot = 0;
-  items.forEach((item)=>{
+  items.forEach((item) => {
     tot += item.qty * item.cost;
-  })
+  });
+  return tot;
+};
+
+
+export const getTotalItems = (items = []) => {
+  let tot = 0;
+  items.forEach((item) => {
+    tot += item.qty;
+  });
   return tot;
 };
 
@@ -89,7 +98,10 @@ export const getTotalCartValue = (items = []) => {
  *
  *
  */
-const ItemQuantity = ({ value, handleAdd, handleDelete }) => {
+const ItemQuantity = ({ value, handleAdd, handleDelete, isReadOnly }) => {
+  if (isReadOnly) {
+    return <Box>Qty:{value}</Box>;
+  }
   return (
     <Stack direction="row" alignItems="center">
       <IconButton size="small" color="primary" onClick={handleDelete}>
@@ -119,11 +131,11 @@ const ItemQuantity = ({ value, handleAdd, handleDelete }) => {
  *
  *
  */
-const Cart = ({ products, items = [], handleQuantity }) => {
+const Cart = ({ products, items = [], handleQuantity, isReadOnly = false }) => {
   const history = useHistory();
   const redirectCheckOut = () => {
-    history.push('/checkout');
-  }
+    history.push("/checkout");
+  };
   if (!items.length) {
     return (
       <Box className="cart empty">
@@ -141,7 +153,12 @@ const Cart = ({ products, items = [], handleQuantity }) => {
         {/* TODO: CRIO_TASK_MODULE_CART - Display view for each cart item with non-zero quantity */}
         {items.map((item) => {
           return (
-            <Box key = {item._id} display="flex" alignItems="flex-start" padding="1rem">
+            <Box
+              key={item._id}
+              display="flex"
+              alignItems="flex-start"
+              padding="1rem"
+            >
               <Box className="image-container">
                 <img
                   // Add product image
@@ -166,10 +183,27 @@ const Cart = ({ products, items = [], handleQuantity }) => {
                   alignItems="center"
                 >
                   <ItemQuantity
-                  // Add required props by checking implementation
-                  value = {item.qty}
-                  handleAdd = {()=> handleQuantity(localStorage.getItem("token"), items, products, item._id,item.qty + 1)}
-                  handleDelete = {()=> handleQuantity(localStorage.getItem("token"), items, products, item._id,item.qty - 1)}
+                    // Add required props by checking implementation
+                    isReadOnly={isReadOnly}
+                    value={item.qty}
+                    handleAdd={() =>
+                      handleQuantity(
+                        localStorage.getItem("token"),
+                        items,
+                        products,
+                        item._id,
+                        item.qty + 1
+                      )
+                    }
+                    handleDelete={() =>
+                      handleQuantity(
+                        localStorage.getItem("token"),
+                        items,
+                        products,
+                        item._id,
+                        item.qty - 1
+                      )
+                    }
                   />
                   <Box padding="0.5rem" fontWeight="700">
                     ${item.cost}
@@ -198,19 +232,42 @@ const Cart = ({ products, items = [], handleQuantity }) => {
             ${getTotalCartValue(items)}
           </Box>
         </Box>
-
-        <Box display="flex" justifyContent="flex-end" className="cart-footer">
-          <Button
-            onClick = {()=> redirectCheckOut()}
-            color="primary"
-            variant="contained"
-            startIcon={<ShoppingCart />}
-            className="checkout-btn"
-          >
-            Checkout
-          </Button>
-        </Box>
+        {!isReadOnly && (
+          <Box display="flex" justifyContent="flex-end" className="cart-footer">
+            <Button
+              onClick={() => redirectCheckOut()}
+              color="primary"
+              variant="contained"
+              startIcon={<ShoppingCart />}
+              className="checkout-btn"
+            >
+              Checkout
+            </Button>
+          </Box>
+        )}
       </Box>
+
+      {isReadOnly && (
+        <Box className="cart" padding="1rem">
+          <h2>Order Details</h2>
+          <Box className="cart-row">
+            <p>Products</p>
+            <p>{getTotalItems(items)}</p>
+          </Box>
+          <Box className="cart-row">
+            <p>Subtotal</p>
+            <p>${getTotalCartValue(items)}</p>
+          </Box>
+          <Box className="cart-row">
+            <p>Shipping Charges</p>
+            <p>${0}</p>
+          </Box>
+          <Box className="cart-row">
+            <h4>Total</h4>
+            <h4>${getTotalCartValue(items)}</h4>
+          </Box>
+        </Box>
+      )}
     </>
   );
 };
